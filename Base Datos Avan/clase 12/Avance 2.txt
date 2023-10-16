@@ -1,0 +1,235 @@
+--avance 2
+
+--1.Implemente un bloque de instrucciones que permita eliminar un registro de Cliente por su código. 
+--Si hay un error en el proceso, visualice un mensaje de error. Implemente funciones especiales de error.
+
+use factura
+
+BEGIN TRY
+ALTER TABLE [dbo].[Pedidos]
+DROP CONSTRAINT [fk_4];
+
+ALTER TABLE [dbo].[Pedidos]  WITH CHECK ADD  CONSTRAINT [fk_4] FOREIGN KEY([FormaEnvio])
+REFERENCES [dbo].[compañiasdeenvios] ([idCompañiaEnvios]) ON DELETE CASCADE
+
+ALTER TABLE [dbo].[Pedidos]
+DROP CONSTRAINT [fk_5];
+
+ALTER TABLE [dbo].[Pedidos]  WITH CHECK ADD  CONSTRAINT [fk_5] FOREIGN KEY([IdCliente])
+REFERENCES [dbo].[clientes] ([idCliente]) ON DELETE CASCADE
+
+ALTER TABLE [dbo].[Pedidos]
+DROP CONSTRAINT [fk_6];
+
+ALTER TABLE [dbo].[Pedidos]  WITH CHECK ADD  CONSTRAINT [fk_6] FOREIGN KEY([IdEmpleado])
+REFERENCES [dbo].[Empleados] ([IdEmpleado]) ON DELETE CASCADE
+
+ALTER TABLE [dbo].[detallesdepedidos]
+DROP CONSTRAINT [fk_1];
+
+ALTER TABLE [dbo].[detallesdepedidos]  WITH CHECK ADD  CONSTRAINT [fk_1] FOREIGN KEY([idpedido])
+REFERENCES [dbo].[Pedidos] ([IdPedido]) ON DELETE CASCADE
+
+DELETE FROM [dbo].[clientes] WHERE idCliente='AROUT';
+
+print'No hay error'
+END TRY
+BEGIN CATCH
+PRINT error_message()	
+end catch;
+
+
+SELECT * FROM productos;
+
+
+--2.Implemente un proceso que elimine los productos cuyo valor de sus unidades en existencia, 
+--sea menor a 20, en caso de no ejecutar exitosamente el error, implemente el CATCH para controlar el error. 
+
+BEGIN TRY
+
+
+DELETE FROM [dbo].[productos] WHERE unidadesEnExistencia<20;
+
+print'No hay error'
+END TRY
+BEGIN CATCH
+PRINT error_message()	
+end catch;
+
+SELECT * FROM productos where precioUnidad<20; 
+
+--3.	Trabajando con un cursor dinámico, defina un cursor dinámico que permita visualizar: 
+--el primer registro, el registro en la posición 6 y el último registro con la tabla productos.
+
+declare  mi_cursor_dinamico cursor scroll--scroll es para que el cursor sea dinamico
+for
+	select * from productos
+open mi_cursor_dinamico
+fetch first from mi_cursor_dinamico fetch absolute 6 from mi_cursor_dinamico fetch last from mi_cursor_dinamico 
+--cerrar
+close mi_cursor
+--liberar-sacar de memoria ram
+deallocate mi_cursor_dinamico  --absolute
+
+--4.Trabajando con un cursor, imprimir un listado de los pedidos realizados por cada año. En dicho proceso, 
+--listar por cada año los pedidos registrados y totalizando dichos pedidos por dicho año. 
+
+declare @FechaPedido int,@IdPedido INT, @sql varchar (1000)
+
+
+declare  mi_cursor_año cursor global --scroll es para que el cursor sea dinamico 
+for
+   select year(FechaPedido) as año, count(IdPedido) as total_pedido_por_año from Pedidos  group by year(FechaPedido) 
+	
+open mi_cursor_año
+fetch mi_cursor_año 
+INTO @FechaPedido,@IdPedido
+while(@@FETCH_STATUS=0)
+begin
+print concat(@FechaPedido, ' ' , @IdPedido)
+fetch mi_cursor_año 
+INTO @FechaPedido,@IdPedido
+end
+--cerrar
+close mi_cursor_año
+--liberar-sacar de memoria ram
+deallocate mi_cursor_año  --absolute
+
+select * from Pedidos;
+
+
+-- 5.Actualice el precio de los productos: si su stock es mayor o igual a 1000, 
+-- se descuenta el precio al 50%, sino se descuenta el precio al 20%.
+
+declare @precio float, @cantidad int
+set @cantidad = 1000
+
+declare  mi_cursor_actualizar cursor  --scroll es para que el cursor sea dinamico 
+for
+	select precioUnidad from productos FOR UPDATE
+	
+open mi_cursor_actualizar
+
+fetch mi_cursor_actualizar 
+INTO @precio
+
+while(@@FETCH_STATUS=0)
+begin
+if exists(select precioUnidad from productos where unidadesEnExistencia >=@cantidad)
+begin
+Update productos set precioUnidad -= (precioUnidad*50/100) where current of mi_cursor_actualizar
+print 'Actualizado correctamente 50'
+end
+else
+begin
+Update productos set precioUnidad -= (precioUnidad*20/100) where current of mi_cursor_actualizar
+print 'Actualizado correctamente 20'
+end
+
+fetch mi_cursor_actualizar 
+INTO @precio
+end
+--cerrar
+close mi_cursor_actualizar
+--liberar-sacar de memoria ram
+deallocate mi_cursor_actualizar  --absolute
+
+
+select precioUnidad from productos
+
+
+--6.	Crear una función de tabla en línea que permita mostrar los pedidos realizados por un empleado (idempleado).
+
+BEGIN TRY
+
+
+select P.IdPedido as Pedidos, e.Nombre from Pedidos p inner join Empleados E on p.IdEmpleado=e.IdEmpleado where p.IdEmpleado = 2;
+
+print'No hay error'
+END TRY
+BEGIN CATCH
+PRINT error_message()	
+end catch;
+
+
+--7.	Crear un Trigger que guarde los datos en la tabla ControlTrigger cuando se relice 
+--una modificación en un empleado. Guardar la hora de la actualización en un campo aparte en 
+--la tabla ControlTrigger. (Añadir un campo)
+
+use Practica1
+
+CREATE TABLE ControlTrigger(
+	ID_Emple int NOT NULL,
+	ID_Depar int NULL,
+	Nombre varchar(30) NULL,
+	Hora time
+	);
+
+
+create trigger ControlTrigger_actualizar
+on Empleado
+after update
+as
+insert into ControlTrigger 
+select 	ID_Emple,ID_Depar,Nombre,GETDATE()  from inserted 
+
+select * from ControlTrigger;
+
+update Empleado set Nombre = 'Ronald' where ID_Emple = 21;
+
+select * from Empleado
+
+
+--8.	Queremos que se guarde en una tabla EmpleadosInsertados  el historial de inserciones de registros 
+--realizadas en la tabla empleados, además de los datos del empleado se deberá guardar en la tabla 
+--el usuario que realizó la inserción del empleado y la fecha/hora de la operación. 
+
+create table EmpleadosInsertados
+(
+	ID_Emple int NOT NULL,
+	ID_Depar int NULL,
+	Nombre varchar(30) NULL,
+	Usuario varchar (50)null,
+	Fecha_Hora datetime
+)
+
+
+
+create trigger ControlTrigger_Insertar_Empleado
+on Empleado
+after insert
+as
+insert into EmpleadosInsertados 
+select 	ID_Emple,ID_Depar,Nombre,user,GETDATE()  from inserted 
+
+select * from EmpleadosInsertados;
+
+insert into Empleado (ID_Emple,ID_Depar,Nombre) values (26,33,'Andres')
+
+
+--9.Crear un Trigger que borre sobre la tabla Empleados. Mostrar el registro borrado al ejecutar el Trigger,
+--incluyendo la fecha de la operación y el usuario.
+
+CREATE TABLE EmpleadoEliminado
+(
+	ID_Emple int NOT NULL,
+	ID_Depar int NULL,
+	Nombre varchar(30) NULL,
+	Fecha date,
+	Usuario varchar(50)
+)
+
+
+create trigger Empleado_Eliminado_delete
+on Empleado
+after delete
+as 
+insert into EmpleadoEliminado
+select ID_Emple,ID_Depar,Nombre,GETDATE(),USER from deleted
+
+
+SELECT * FROM EmpleadoEliminado
+
+delete Empleado where ID_Emple=26
+
+DROP TRIGGER Tr_Empleado_Eliminado_Delete

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<DTS:ConnectionManager xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:ObjectName="LocalHost.practica1"
+  DTS:DTSID="{5AC4FE1A-0DB6-458C-871F-4828EAEC6859}"
+  DTS:CreationName="OLEDB">
+  <DTS:ObjectData>
+    <DTS:ConnectionManager
+      DTS:ConnectRetryCount="1"
+      DTS:ConnectRetryInterval="5"
+      DTS:ConnectionString="Data Source=.;Initial Catalog=practica1;Provider=SQLNCLI11.1;Integrated Security=SSPI;Application Name=SSIS-Practica1-{5AC4FE1A-0DB6-458C-871F-4828EAEC6859}LocalHost.practica1;Auto Translate=False;" />
+  </DTS:ObjectData>
+</DTS:ConnectionManager>

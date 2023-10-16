@@ -1,0 +1,12 @@
+﻿<?xml version="1.0"?>
+<DTS:ConnectionManager xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:ObjectName="LocalHost.cargaETL"
+  DTS:DTSID="{E10FBE60-3BA7-4449-9B44-6F677E4B8758}"
+  DTS:CreationName="OLEDB">
+  <DTS:ObjectData>
+    <DTS:ConnectionManager
+      DTS:ConnectRetryCount="1"
+      DTS:ConnectRetryInterval="5"
+      DTS:ConnectionString="Data Source=.;Initial Catalog=cargaETL;Provider=SQLNCLI11.1;Integrated Security=SSPI;Application Name=SSIS-Practica1-{E10FBE60-3BA7-4449-9B44-6F677E4B8758}LocalHost.cargaETL;Auto Translate=False;" />
+  </DTS:ObjectData>
+</DTS:ConnectionManager>
