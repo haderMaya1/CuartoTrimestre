@@ -1,0 +1,10 @@
+Variables:socioA, invN, socioB, invM, gananciaP, socioC, invX, reInv
+	
+(CASO 1)
+	Cadena = socioA
+	Cadena = socioB
+	Cadena = socioC
+	numero = invN
+	numero = invM
+	numero = invX
+imprimir "La cantidad de de dinero que invirtieron los socios son"
