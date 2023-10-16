@@ -1,0 +1,47 @@
+Formato de anteproyecto:
+
+Normas APA vigentes
+
+- Cubierta
+- Portada
+- Subportada
+- Tabla de contenido
+- Introducción
+
+1. Título
+2. Planteamiento del problema
+   2.1 Planteamiento del problema
+   2.2 Árbol del problema
+   2.3 Justificación
+   2.4 Alcance
+3. Objetivos
+   3.1 Objetivo General
+   3.2 Objetivos específicos
+   3.3 Árbol de objetivos
+4. Matriz del Marco lógico
+5. Marco Referencial
+   5.1 Marco teórico
+   5.2 Marco conceptual
+   5.3 Marco legal
+6. Diseño de aspectos metodológicos
+   6.1 Línea de investigación (describir)
+   6.2 Enfoque: Mediciones de variables (cuantitativo)
+                Mediciones de grado de efectividad a través de opiniones (cualitativo)
+   6.3 Tipo de investigación: Investigación formativa. I.Aplicada
+   6.4 Método: Fases del proyecto (para desarrollar la aplicación)
+   6.5 Hipótesis: plasmar lo que se está pretendiendo demostrar con la puesta en marcha del proyecto
+   6.6 Variables
+7. Elementos de adminstración y control
+   7.1 Identificación de requerimientos (funcionales y no funcionales)
+   7.2 Diagramas UML (de comportamiento, casos de uso, clases, paquetes, componentes, 
+                      estados, actividades y secuencia).
+   7.3 Mockups
+   7.4 Modelo Entidad Relación (Base de datos)
+   7.5 Recursos físicos y técnicos
+   7.6 Talento humano
+   7.7 Presupuesto
+   7.8 Cronograma de actividades (Trello)
+
+8. Cuadro de involucrados
+9. Bibliografía y cibergrafía.
+ 
