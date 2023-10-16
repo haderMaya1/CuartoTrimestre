@@ -1,0 +1,152 @@
+ORacle clase 9
+	set SERVEROUTPUT ON;
+	SET VERIFY OFF;
+--D.E
+	DECLARE
+		v_edad number := &edad;
+	BEGIN
+	IF v_edad>=18 THEN
+		DBMS_OUTPUT.PUT_LINE (' Mayor de edad');
+	ELSE
+		DBMS_OUTPUT.PUT_LINE (' Menor de edad');
+	END IF;
+  END;
+
+
+declare
+    type a_paises is varray(5) of varchar2(20); --creamos el array
+    nombre a_paises; --creamos la variable nombre tipo array
+begin
+    nombre:=a_paises('Col','Mex','Arg','Per','Boli');
+    for f in 1..5 loop
+        DBMS_OUTPUT.PUT_LINE ('Nombre: ' || nombre(f));
+    end loop;
+end;
+
+declare
+    type a_nombre is varray(5) of varchar2(20); --creamos el array
+    type a_apellido is varray(5) of varchar(30);
+    apellido a_apellido;
+    nombre a_paises; --creamos la variable nombre tipo array
+begin
+    nombre:=a_nombre('sim','Mex','Args','Perz','Bolix');
+    apellido:=a_apellido('esperanza','Deq','EstoF','Pdda','Funcionar')
+    for f in 1..5 loop
+        DBMS_OUTPUT.PUT_LINE ('Nombre: ' || nombre(f));
+	DBMS_OUTPUT.PUT_LINE ('Apellido: ' || apellido(f));
+    end loop;
+end;
+
+
+declare
+    type a_nombre is varray(5) of varchar2(20); --creamos el array
+    type a_edad is varray(5) of  int(30);
+    edad a_edad;
+    nombre a_nombre; --creamos la variable nombre tipo array
+begin
+    nombre:=a_nombre('Sim','Mex','Args','Perz','Bolix');
+    edad:=a_edad(30,45,58,5,38);
+    for f in 1..5 loop
+        DBMS_OUTPUT.PUT_LINE ('Nombre: ' || nombre(f)|| ' Edad: ' || edad(f) || ' Años');
+    end loop;
+end;
+
+
+Create or replace procedure insert_datos
+    (
+        p_id_ in prueba.id_%Type, 
+        p_nombre in prueba.nombre%type,
+        p_apellido in prueba.apellido%type,
+        p_edad in prueba.edad%type NUMBER
+    )
+IS
+--Declaracion de variables
+Begin
+    insert into prueba values (p_id, p_nombre, p_apellido, p_edad);
+    DBMS_OUTPUT.PUT_LINE ('Se almaceno correctamente');
+Exception
+    When Others Then
+    DBMS_OUTPUT.PUT_LINE ('Se ha producido un error, intentelo de nuevo');
+End;
+
+Create or replace procedure insert_datos
+    (
+        p_id in prueba.id_%Type,
+        p_nombre in prueba.nombre%type,
+        p_apellido in prueba.apellido%type,
+        p_edad in prueba.edad%type
+    )
+IS
+--Declaracion de variables
+Begin
+    insert into prueba values (p_id, p_nombre, p_apellido, p_edad);
+    DBMS_OUTPUT.PUT_LINE ('Se almaceno correctamente');
+Exception
+    When Others Then
+    DBMS_OUTPUT.PUT_LINE ('Se ha producido un error, intentelo de nuevo');
+End;
+
+Begin
+    insert_datos (1, 'Hader', 'Maya', 24);
+End;
+
+select * from prueba
+
+/*Hacer una secuencia en ORACLE*/
+
+create or replace procedure report
+is
+    cursor a_l is select * from prueba;
+begin
+    for a_list in a_l loop
+        DBMS_OUTPUT.PUT_LINE (a_list.nombre || '' || a_list.apellido || '' || a_list.edad);
+    end loop;
+exception
+    when others then
+        DBMS_OUTPUT.PUT_LINE ('Something is wrong');
+END;
+
+begin
+    report();
+end;
+
+--Procedimiento Actualizar
+CREATE OR REPLACE PROCEDURE ActPersona
+(
+     ap_id in prueba.id_%type,
+     ap_nombre prueba.nombre%type,
+     ap_apellido in prueba.apellido%type,
+     ap_edad in prueba.edad%type
+)
+is
+begin
+update prueba set nombre=ap_nombre,apellido=ap_apellido,edad=ap_edad where id_=ap_id;
+end;
+
+select * from prueba;
+
+--Procedimiento eliminar
+
+Create or replace procedure ElmPersona
+(
+    ep_id in prueba.id_%type
+)
+is
+begin
+    delete from prueba where id_=ep_id;
+end;
+
+--Consultar promedio por medio de codigo
+create or replace procedure buscarPersona(bp_id in prueba.id_%type)
+as  
+    bp_nombre prueba.nombre%type;
+    bp_apellido prueba.apellido%type;
+    bp_edad prueba.edad%type;
+begin
+    select nombre, apellido, edad into bp_nombre, bp_apellido, bp_edad from prueba
+    where id_ = bp_id;
+    dbms_output.put_line('Cedula persona: ' || bp_id);
+    dbms_output.put_line('Nombre persona: ' || bp_nombre);
+    dbms_output.put_line('Apellido persona: ' || bp_apellido);
+    dbms_output.put_line('Edad persona: ' || bp_edad);
+end;
