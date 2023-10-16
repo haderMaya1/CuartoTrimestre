@@ -1,0 +1,7 @@
+Modelo ER (DIA)
+SCRIPT CINE Base de Datos 
+PROCEDIMIENTOS ALMACENADOS, los licks, update, delete, read. (Para toda las Tablas)
+Script Modelo relacional punto 3 de la guia
+ejercicios de importar y exporter 
+consultas (7 tipos)
+Consultar (Inner Join)
